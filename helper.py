@@ -38,9 +38,11 @@ def make_X(Z, lambda_x, mean, eigvec, size=200, dimensions=3):
        variance, generate a translated normal vector X.'''
     x = eigvec @ np.power(lambda_x, 0.5) @ Z[0] + mean
 
-    for i in range(size - 1):
-    point = eigvec @ np.power(lambda_x, 0.5) @ Z[0] + mean
+    for i in range(1, size):
+        point = eigvec @ np.power(lambda_x, 0.5) @ Z[i] + mean
+        x = np.append(x, point, axis=1)
 
+    return x
 
 def inv_sqrt(A):
     '''Perform the element wise inverse square root. Assumes m x n matrix.'''
