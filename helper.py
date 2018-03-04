@@ -36,7 +36,10 @@ def make_Z(size=200, dimensions=3):
 def make_X(Z, lambda_x, mean, eigvec, size=200, dimensions=3):
     '''Given a standard normal vector Z, a mean, and eigen values and vectors of
        variance, generate a translated normal vector X.'''
-    x = Z[0]
+    x = eigvec @ np.power(lambda_x, 0.5) @ Z[0] @ mean
+
+    for i in range(size - 1):
+    point = eigvec @ np.power(lambda_x, 0.5) @ Z[0] @ mean
 
 
 def inv_sqrt(A):
