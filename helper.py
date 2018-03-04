@@ -21,6 +21,20 @@ def normal_vector(size):
     return vec
 
 
+def normal_point(dimensions=3):
+    '''Generate a point from a standard normal distribution.'''
+    x = []
+    for i in range(dimensions):
+        z = 0
+        for j in range(12):
+            a = rand(0, 1)
+            z += a
+        z -= 6
+        x.append([z])
+    x = np.array(x)
+    return x
+
+
 def multi_normal_vector(size, dimensions=2):
     '''Generate a Normally distributed vector from a uniform pseudo-random
        number generator.'''
