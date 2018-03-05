@@ -96,13 +96,15 @@ def two_class_discriminant(trd, sigma1, sigma2, mean1, mean2, p1=0.5, p2=0.5):
     # From our course notes
     # ax^2 +bx + c
     # xT a x => equivalent to x^2
-    a = (np.linalg.inv(sigma2) - np.linalg.inv(sigma1))
-
+    a = (np.linalg.inv(sigma2) - np.linalg.inv(sigma1)) / 2
     b = mean1.transpose() @ (np.linalg.inv(sigma1) - mean2.transpose()) @ np.linalg.inv(sigma2)
     # Don't specify base for math.log base e, (ln), np.log is base e
     c = log(p1 / p2) + np.log(np.linalg.det(sigma2) / np.linalg.det(sigma1))
 
     return (trd.transpose() @ a @ trd + b @ trd + c)
+
+def discrim_pts():
+    pass
 
 # Now to correct some problems with my diagonalization from last assignment. I
 # figured it would be better to include it in my helper functions instead of

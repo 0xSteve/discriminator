@@ -1,7 +1,7 @@
 '''This is the main script for the assignment.'''
 
 import numpy as np
-# from numpy import linalg as la
+from numpy import linalg as la
 from helper import *
 
 # I made some mistakes with my assignment 2, so I've updated my
@@ -24,11 +24,11 @@ c = 4
 S1 = [[a * a, beta * a * b, alpha * a * c],
           [beta * a * b, b * b, beta * b * c],
           [alpha * a * c, beta * b * c, c * c]]
-S1 = np.array(np.round(S1, 2))
+S1 = np.array(np.round(S1, 6))
 S2 = [[c * c, alpha * b * c, beta * a * c],
           [alpha * b * c, b * b, alpha * a * b],
           [beta * a * c, alpha * a * b, a * a]]
-S2 = np.array(np.round(S1, 6))
+S2 = np.array(np.round(S2, 6))
 print("SIGMA 1 \n" + str(S1))
 print("SIGMA 2 \n" + str(S2))
 
@@ -41,12 +41,20 @@ print("X1 Eigenvalues \n " + str(lambda1))
 print("X2 Eigenvalues \n " + str(lambda2))
 # I really don't know why it was having a size error when I did this
 # individually. Figure this out later. Tomorrow perhaps?
-X1, z1 = make_ZX(lambda1, M1, v1, 10)
-X2, z2 = make_ZX(lambda2, M2, v2, 10)
-print("z1 is \n" + str(z1))
-print("X1 is \n" + str(X1))
-print("z2 is \n" + str(z2))
-print("X2 is \n" + str(X2))
+X1, z1 = make_ZX(lambda1, M1, v1)
+X2, z2 = make_ZX(lambda2, M2, v2)
+# print("z1 is \n" + str(z1))
+# print("X1 is \n" + str(X1))
+# print("z2 is \n" + str(z2))
+# print("X2 is \n" + str(X2))
 # Now to plot... Perhaps make a graphing functing?
 nice_plot(X1, X2, 1, 2, 'X1', 'X2')
-nice_plot(X1, X2, 1, 3, 'X1', 'X2')
+nice_plot(X1, X2, 1, 3, 'X1', 'X3')
+
+a = (np.linalg.inv(S2) - np.linalg.inv(S1)) / 2
+b = M1.transpose() @ (np.linalg.inv(S1) - M2.transpose()) @ np.linalg.inv(S2)
+# Don't specify base for math.log base e, (ln), np.log is base e
+c = log(0.5 / 0.5) + np.log(np.linalg.det(S2) / np.linalg.det(S1))
+print("a is \n " + str(a))
+print("b is \n " + str(b))
+print("c is \n " + str(c))
