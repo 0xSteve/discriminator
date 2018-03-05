@@ -162,7 +162,7 @@ def two_class_diag(X1, M1, S1, X2, M2, S2):
     Z2 = np.diag(np.power(w2, -0.5)) @ v1.transpose() @ X2
     # Make Sz1, Sz2
     Sz1 = np.diag(np.power(w1, -0.5)) @ np.diag(np.power(w1, -0.5)) @ v1.transpose()
-    Sz2 = np.diag(np.power(w1, -0.5)) @ v1.transpose() @ sigma2 @ v1 @ np.diag(np.power(w1, -0.5))
+    Sz2 = np.diag(np.power(w1, -0.5)) @ v1.transpose() @ S2 @ v1 @ np.diag(np.power(w1, -0.5))
     # Now get the P overall
     Poa = 0 # stands for P OverAll
 
