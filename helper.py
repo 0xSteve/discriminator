@@ -57,7 +57,6 @@ def make_ZX(lambda_x, mean, eigvec, size=200, dimensions=3):
     for i in range(1, size):
         pt = normal_point(dimensions)
         z = np.append(z, pt, axis=1)
-        pt = 0
         pt =  eigvec @ np.power(lambda_x, 0.5) @ pt + mean
         x = np.append(x, pt, axis=1)
     # ROFL Don't indent the return!!!!
@@ -156,7 +155,7 @@ def nice_plot(omega1, omega2, dim1, dim2, label1, label2):
     dim1 -= 1  # Adjust for vector index.
     dim2 -= 1  # Adjust for vector index.
     plt.plot(omega1[dim1, :], omega1[dim2, :], 'y.', label="Class One")
-    plt.plot(omega1[dim1, :], omega1[dim2, :], 'p.', label="Class Two")
+    plt.plot(omega1[dim1, :], omega1[dim2, :], 'g.', label="Class Two")
     plt.title(title)
     plt.legend(loc=1)
     plt.xlabel(label1)

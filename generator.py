@@ -41,10 +41,12 @@ print("X1 Eigenvalues \n " + str(lambda1))
 print("X2 Eigenvalues \n " + str(lambda2))
 # I really don't know why it was having a size error when I did this
 # individually. Figure this out later. Tomorrow perhaps?
-X1, z1 = make_ZX(lambda1, M1, v1)
-X2, z2 = make_ZX(lambda2, M2, v2)
+X1, z1 = make_ZX(lambda1, M1, v1, 10)
+X2, z2 = make_ZX(lambda2, M2, v2, 10)
 print("z1 is \n" + str(z1))
 print("X1 is \n" + str(X1))
+print("z2 is \n" + str(z2))
+print("X2 is \n" + str(X2))
 # Now to plot... Perhaps make a graphing functing?
 nice_plot(X1, X2, 1, 2, 'X1', 'X2')
 nice_plot(X1, X2, 1, 3, 'X1', 'X2')
