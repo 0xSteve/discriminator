@@ -47,7 +47,7 @@ def normal_point(dimensions=3):
 
 #     return x
 
-def make_ZX(lambda_x, mean, eigvec, size=200, dimensions=3):
+def make_XZ(lambda_x, mean, eigvec, size=200, dimensions=3):
     '''Given a standard normal vector Z, a mean, and eigen values and vectors of
        variance, generate a translated normal vector X.'''
     z = normal_point(dimensions)
@@ -99,12 +99,37 @@ def two_class_discriminant(trd, sigma1, sigma2, mean1, mean2, p1=0.5, p2=0.5):
     a = (np.linalg.inv(sigma2) - np.linalg.inv(sigma1)) / 2
     b = mean1.transpose() @ (np.linalg.inv(sigma1) - mean2.transpose()) @ np.linalg.inv(sigma2)
     # Don't specify base for math.log base e, (ln), np.log is base e
-    c = log(p1 / p2) + np.log(np.linalg.det(sigma2) / np.linalg.det(sigma1))
+    c = np.math.log(p1 / p2) + np.log(np.linalg.det(sigma2) / np.linalg.det(sigma1))
 
     return (trd.transpose() @ a @ trd + b @ trd + c)
 
-def discrim_pts():
-    pass
+
+def classify(trd1, trd2, S1, S2, M1, M2, p1=0.5, p2=0.5):
+    '''Do a 2 class classification problem.'''
+    # I should make this an array but it is 4 am.
+    c1_T = 0
+    c2_T = 0
+    c1_F = 0
+    c2_F = 0
+
+    for i in range(len(trd1[1, :]) - 1):
+        discrim = two_class_discriminant(trd1[:, i], S1, S2, M1, M2, p1, p2)
+        if(discrim > 0):
+            c1_T += 1
+        else:
+            c1_F += 1
+
+    for i in range(len(trd2[1, :]) - 1):
+        discrim = two_class_discriminant(trd2[:, i], S1, S2, M1, M2, p1, p2)
+
+        if(discrim < 0):
+            c2_T += 1
+        else:
+            c2_F += 1
+
+    acc1 = c1_T / (len(trd1[1, :]) - 1)
+    acc2 = c2_T / (len(trd2[1, :]) - 1)
+    return c1_T, c1_F, c2_T, c2_F, acc1, acc2
 
 # Now to correct some problems with my diagonalization from last assignment. I
 # figured it would be better to include it in my helper functions instead of

@@ -41,20 +41,94 @@ print("X1 Eigenvalues \n " + str(lambda1))
 print("X2 Eigenvalues \n " + str(lambda2))
 # I really don't know why it was having a size error when I did this
 # individually. Figure this out later. Tomorrow perhaps?
-X1, z1 = make_ZX(lambda1, M1, v1)
-X2, z2 = make_ZX(lambda2, M2, v2)
+X1, z1 = make_XZ(lambda1, M1, v1)
+X2, z2 = make_XZ(lambda2, M2, v2)
 # print("z1 is \n" + str(z1))
 # print("X1 is \n" + str(X1))
 # print("z2 is \n" + str(z2))
 # print("X2 is \n" + str(X2))
 # Now to plot... Perhaps make a graphing functing?
-nice_plot(X1, X2, 1, 2, 'X1', 'X2')
-nice_plot(X1, X2, 1, 3, 'X1', 'X3')
+# nice_plot(X1, X2, 1, 2, 'X1', 'X2')
+# nice_plot(X1, X2, 1, 3, 'X1', 'X3')
 
 a = (np.linalg.inv(S2) - np.linalg.inv(S1)) / 2
 b = M1.transpose() @ (np.linalg.inv(S1) - M2.transpose()) @ np.linalg.inv(S2)
 # Don't specify base for math.log base e, (ln), np.log is base e
-c = log(0.5 / 0.5) + np.log(np.linalg.det(S2) / np.linalg.det(S1))
-print("a is \n " + str(a))
-print("b is \n " + str(b))
-print("c is \n " + str(c))
+c = np.math.log(0.5 / 0.5) + np.log(np.linalg.det(S2) / np.linalg.det(S1))
+# print("a is \n " + str(a))
+# print("b is \n " + str(b))
+# print("c is \n " + str(c))
+x_axis_pts = []
+r1 = []
+r2 = []
+
+ax2 = a[1, 1]
+for i in range(-12, 12, 1):
+    x_axis_pts.append(i)
+    bx = a[0, 1] * i + a[1, 0] * i + b[0, 1]
+    const = a[0, 0] * np.math.pow(i, 2) + b[0, 0] * i + c
+
+    # use numpy to get roots from here
+    roots = np.roots([ax2, bx, const])
+    # I don't want to think about the shape anymore.
+    r1.append(roots[0])
+    r2.append(roots[1])
+print(r1)
+print(r2)
+plt.plot(X1[0, :], X1[1, :], 'y.', label="Class One")
+plt.plot(X2[0, :], X2[1, :], 'g.', label="Class Two")
+plt.plot(x_axis_pts, r1, 'r-', label="Discriminant Root 1")
+plt.plot(x_axis_pts, r2, 'b-', label="Discriminant Root 2")
+plt.title("X1 -- X2 with discriminant")
+plt.legend(loc=1)
+plt.xlabel("X1")
+plt.ylabel("X2")
+# Okay I seriously need to add axis
+minimum = min(min(min(X1[0, :]), min(X2[0, :])), min(min(X1[1, :]), min(X2[1, :])))
+maximum = max(max(max(X1[0, :]), max(X2[0, :])), max(max(X1[1, :]), max(X2[1, :])))
+plt.axis([minimum - 1, maximum + 1, minimum - 1, maximum + 1])
+plt.show()
+
+x_axis_pts = []
+r1 = []
+r2 = []
+
+ax2 = a[2][2]
+for i in range(-12, 12, 1):
+    x_axis_pts.append(i)
+    bx = a[0, 2] * i + a[2, 0] * i + b[0, 2]
+    const = a[0, 0] * np.math.pow(i, 2) + b[0, 0] * i + c
+
+    # use numpy to get roots from here
+    roots = np.roots([ax2, bx, const])
+    # I don't want to think about the shape anymore.
+    r1.append(roots[0])
+    r2.append(roots[1])
+print(r1)
+plt.plot(X1[0, :], X1[2, :], 'y.', label="Class One")
+plt.plot(X2[0, :], X2[2, :], 'g.', label="Class Two")
+plt.plot(x_axis_pts, r1, 'r-', label="Discriminant Root 1")
+plt.plot(x_axis_pts, r2, 'b-', label="Discriminant Root 2")
+plt.title("X1 -- X3 with discriminant")
+plt.legend(loc=1)
+plt.xlabel("X1")
+plt.ylabel("X3")
+# Okay I seriously need to add axis
+minimum = min(min(min(X1[0, :]), min(X2[0, :])), min(min(X1[2, :]), min(X2[2, :])))
+maximum = max(max(max(X1[0, :]), max(X2[0, :])), max(max(X1[2, :]), max(X2[2, :])))
+plt.axis([minimum - 1, maximum + 1, minimum - 1, maximum + 1])
+plt.show()
+
+# One root doesn't show up due to scale.
+
+# okay, for this part i can use my function!
+
+trd1, _ = make_XZ(lambda1, M1, v1)
+trd2, _ = make_XZ(lambda2, M2, v2)
+
+c1t, c1f, c2t, c2f, acc1, acc2 = classify(trd1, trd2, S1, S2, M1, M2)
+
+print("Is Class 1: " + str(c1t) + ", Not Class 1: " + str(c1f) +
+      ", accuracy of " + str(acc1))
+print("Is Class 1: " + str(c2f) + ", not Class 1: " + str(c2t) +
+      ", accuracy of " + str(acc2))
