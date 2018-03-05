@@ -21,29 +21,44 @@ def normal_point(dimensions=3):
     return x
 
 
-def make_Z(size=200, dimensions=3):
-    '''Create an array of Normally distributed points.'''
-    Z = normal_point(dimensions)  # Will become a non-empty numpy array.
+# def make_Z(size=200, dimensions=3):
+#     '''Create an array of Normally distributed points.'''
+#     Z = normal_point(dimensions)  # Will become a non-empty numpy array.
 
-    for i in range(size - 1):
-        point = normal_point(dimensions)
-        # add the new point on axis 1 to create a new column.
-        Z = np.append(Z, point, axis=1)
+#     for i in range(size - 1):
+#         point = normal_point(dimensions)
+#         # add the new point on axis 1 to create a new column.
+#         Z = np.append(Z, point, axis=1)
 
-    return Z
+#     return Z
 
 
-def make_X(Z, lambda_x, mean, eigvec, size=200, dimensions=3):
+# def make_X(Z, lambda_x, mean, eigvec, size=200, dimensions=3):
+#     '''Given a standard normal vector Z, a mean, and eigen values and vectors of
+#        variance, generate a translated normal vector X.'''
+
+#     x = eigvec @ np.power(lambda_x, 0.5) @ Z[0, :] + mean
+
+#     for i in range(1, size):
+#         point = eigvec @ np.power(lambda_x, 0.5) @ Z[i] + mean
+#         x = np.append(x, point, axis=1)
+
+#     return x
+
+def make_ZX(lambda_x, mean, eigvec, size=200, dimensions=3):
     '''Given a standard normal vector Z, a mean, and eigen values and vectors of
        variance, generate a translated normal vector X.'''
+    z = normal_point(dimensions)
 
-    x = eigvec @ np.power(lambda_x, 0.5) @ Z[0, :] + mean
+    x = eigvec @ np.power(lambda_x, 0.5) @ z + mean
 
     for i in range(1, size):
-        point = eigvec @ np.power(lambda_x, 0.5) @ Z[i] + mean
-        x = np.append(x, point, axis=1)
+        pt = normal_point(dimensions)
+        z = np.append(z, pt, axis=1)
+        pt =  eigvec @ np.power(lambda_x, 0.5) @ pt + mean
+        x = np.append(x, pt, axis=1)
+        return x, z
 
-    return x
 
 
 def inv_sqrt(A):

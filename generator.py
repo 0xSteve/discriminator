@@ -40,9 +40,6 @@ lambda2 = np.diag(w2)
 print("X1 Eigenvalues \n " + str(lambda1))
 print("X2 Eigenvalues \n " + str(lambda2))
 
-Z1 = make_Z()
-Z2 = make_Z()
-print(Z1[:, 0])
-# Moment of truth...
-X1 = make_X(Z1, lambda1, M1, v1)
-X2 = make_X(Z2, lambda2, M2, v2)
+X1, z1 = make_ZX(lambda1, M1, v1)
+print("z1 is \n" + str(z1))
+print("X1 is \n" + str(X1))
