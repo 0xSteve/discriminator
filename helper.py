@@ -155,7 +155,7 @@ def nice_plot(omega1, omega2, dim1, dim2, label1, label2):
     dim1 -= 1  # Adjust for vector index.
     dim2 -= 1  # Adjust for vector index.
     plt.plot(omega1[dim1, :], omega1[dim2, :], 'y.', label="Class One")
-    plt.plot(omega1[dim1, :], omega1[dim2, :], 'g.', label="Class Two")
+    plt.plot(omega2[dim1, :], omega2[dim2, :], 'g.', label="Class Two")
     plt.title(title)
     plt.legend(loc=1)
     plt.xlabel(label1)
