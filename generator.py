@@ -48,13 +48,13 @@ X2, z2 = make_XZ(lambda2, M2, v2)
 # print("z2 is \n" + str(z2))
 # print("X2 is \n" + str(X2))
 # Now to plot... Perhaps make a graphing functing?
-# nice_plot(X1, X2, 1, 2, 'X1', 'X2')
-# nice_plot(X1, X2, 1, 3, 'X1', 'X3')
+nice_plot(X1, X2, 1, 2, 'X1', 'X2')
+nice_plot(X1, X2, 1, 3, 'X1', 'X3')
 
-a = (np.linalg.inv(S2) - np.linalg.inv(S1)) / 2
-b = M1.transpose() @ (np.linalg.inv(S1) - M2.transpose()) @ np.linalg.inv(S2)
+a = ((np.linalg.inv(S2) - np.linalg.inv(S1)) / 2)
+b = M1.transpose() @ np.linalg.inv(S1) - M2.transpose() @ np.linalg.inv(S2)
 # Don't specify base for math.log base e, (ln), np.log is base e
-c = np.math.log(0.5 / 0.5) + np.log(np.linalg.det(S2) / np.linalg.det(S1))
+c = np.log(np.linalg.det(S2) / np.linalg.det(S1))
 # print("a is \n " + str(a))
 # print("b is \n " + str(b))
 # print("c is \n " + str(c))
@@ -63,18 +63,17 @@ r1 = []
 r2 = []
 
 ax2 = a[1, 1]
-for i in range(-12, 12, 1):
+for i in range(-12, 10, 1):
     x_axis_pts.append(i)
-    bx = a[0, 1] * i + a[1, 0] * i + b[0, 1]
-    const = a[0, 0] * np.math.pow(i, 2) + b[0, 0] * i + c
+    bx = (a[0, 1] * i) + (a[1, 0] * i) + b[0, 1]
+    const = (a[0, 0] * np.math.pow(i, 2)) + (b[0, 0] * i) + c
 
-    # use numpy to get roots from here
     roots = np.roots([ax2, bx, const])
     # I don't want to think about the shape anymore.
     r1.append(roots[0])
     r2.append(roots[1])
-print(r1)
-print(r2)
+# print(r1)
+# print(r2)
 plt.plot(X1[0, :], X1[1, :], 'y.', label="Class One")
 plt.plot(X2[0, :], X2[1, :], 'g.', label="Class Two")
 plt.plot(x_axis_pts, r1, 'r-', label="Discriminant Root 1")
@@ -104,7 +103,7 @@ for i in range(-12, 12, 1):
     # I don't want to think about the shape anymore.
     r1.append(roots[0])
     r2.append(roots[1])
-print(r1)
+# print(r1)
 plt.plot(X1[0, :], X1[2, :], 'y.', label="Class One")
 plt.plot(X2[0, :], X2[2, :], 'g.', label="Class Two")
 plt.plot(x_axis_pts, r1, 'r-', label="Discriminant Root 1")
@@ -126,14 +125,96 @@ plt.show()
 trd1, _ = make_XZ(lambda1, M1, v1)
 trd2, _ = make_XZ(lambda2, M2, v2)
 
-c1t, c1f, c2t, c2f, acc1, acc2 = classify(trd1, trd2, S1, S2, M1, M2)
+V1, Mv1, Sv1, V2, Mv2, Sv2 = two_class_diag(X1, M1, S1, X2, M2, S2)
+trd1, mtrd1, strd1, trd2, mtrd2, strd2 = two_class_diag(V1, Mv1, Sv1, V2, Mv2, Sv2)
+
+c1t, c1f, c2t, c2f, acc1, acc2 = classify(trd1, trd2, Sv1, Sv2, Mv1, Mv2)
 
 print("Is Class 1: " + str(c1t) + ", Not Class 1: " + str(c1f) +
       ", accuracy of " + str(acc1))
 print("Is Class 1: " + str(c2f) + ", not Class 1: " + str(c2t) +
       ", accuracy of " + str(acc2))
 
-V1, Mv1, Sv1, V2, Mv2, Sv2 = two_class_diag(X1, M1, S1, X2, M2, S2)
 
+Sv1 = np.round(Sv1, 6)
+Sv2 = np.round(Sv2, 6)
 nice_plot(V1, V2, 1, 2, 'V1', 'V2')
 nice_plot(V1, V2, 1, 3, 'V1', 'V3')
+print(Sv2)
+print(Sv1)
+
+a = ((np.linalg.inv(strd2) - np.linalg.inv(strd1)) / 2)
+b = mtrd1.transpose() @ np.linalg.inv(strd1) - mtrd2.transpose() @ np.linalg.inv(strd2)
+# Don't specify base for math.log base e, (ln), np.log is base e
+c = np.log(np.linalg.det(strd2) / np.linalg.det(strd1))
+# print("a is \n " + str(a))
+# print("b is \n " + str(b))
+# print("c is \n " + str(c))
+x_axis_pts = []
+r1 = []
+r2 = []
+
+ax2 = a[1, 1]
+for i in range(-22, 22, 1):
+    x_axis_pts.append(i)
+    bx = (a[0, 1] * i) + (a[1, 0] * i) + b[0, 1]
+    const = (a[0, 0] * np.math.pow(i, 2)) + (b[0, 0] * i) + c
+
+    roots = np.roots([ax2, bx, const])
+    # I don't want to think about the shape anymore.
+    r1.append(roots[0])
+    r2.append(roots[1])
+# print(r1)
+# print(r2)
+plt.plot(V1[0, :], V1[1, :], 'y.', label="Class One")
+plt.plot(V2[0, :], V2[1, :], 'g.', label="Class Two")
+plt.plot(x_axis_pts, r1, 'r-', label="Discriminant Root 1")
+plt.plot(x_axis_pts, r2, 'b-', label="Discriminant Root 2")
+plt.title("V1 -- V2 with discriminant")
+plt.legend(loc=1)
+plt.xlabel("V1")
+plt.ylabel("V2")
+# Okay I seriously need to add axis
+minimum = min(min(min(V1[0, :]), min(V2[0, :])), min(min(V1[1, :]), min(V2[1, :])))
+maximum = max(max(max(V1[0, :]), max(V2[0, :])), max(max(V1[1, :]), max(V2[1, :])))
+plt.axis([minimum - 5, maximum + 5, minimum - 5, maximum + 5])
+plt.show()
+
+x_axis_pts = []
+r1 = []
+r2 = []
+
+ax2 = a[2][2]
+for i in range(-22, 22, 1):
+    x_axis_pts.append(i)
+    bx = a[0, 2] * i + a[2, 0] * i + b[0, 2]
+    const = a[0, 0] * np.math.pow(i, 2) + b[0, 0] * i + c
+
+    # use numpy to get roots from here
+    roots = np.roots([ax2, bx, const])
+    # I don't want to think about the shape anymore.
+    r1.append(roots[0])
+    r2.append(roots[1])
+# print(r1)
+plt.plot(V1[0, :], V1[2, :], 'y.', label="Class One")
+plt.plot(V2[0, :], V2[2, :], 'g.', label="Class Two")
+plt.plot(x_axis_pts, r1, 'r-', label="Discriminant Root 1")
+plt.plot(x_axis_pts, r2, 'b-', label="Discriminant Root 2")
+plt.title("V1 -- V3 with discriminant")
+plt.legend(loc=1)
+plt.xlabel("V1")
+plt.ylabel("V3")
+# Okay I seriously need to add axis
+minimum = min(min(min(V1[0, :]), min(V2[0, :])), min(min(V1[2, :]), min(V2[2, :])))
+maximum = max(max(max(V1[0, :]), max(V2[0, :])), max(max(V1[2, :]), max(V2[2, :])))
+plt.axis([minimum - 5, maximum + 5, minimum - 5, maximum + 5])
+plt.show()
+
+# There might be a real reason why this isn't showing up correctly...
+
+c1t, c1f, c2t, c2f, acc1, acc2 = classify(trd1, trd2, strd1, strd2, mtrd1, mtrd2)
+
+print("Is Class 1: " + str(c1t) + ", Not Class 1: " + str(c1f) +
+      ", accuracy of " + str(acc1))
+print("Is Class 1: " + str(c2f) + ", not Class 1: " + str(c2t) +
+      ", accuracy of " + str(acc2))

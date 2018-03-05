@@ -96,8 +96,8 @@ def two_class_discriminant(trd, sigma1, sigma2, mean1, mean2, p1=0.5, p2=0.5):
     # From our course notes
     # ax^2 +bx + c
     # xT a x => equivalent to x^2
-    a = (np.linalg.inv(sigma2) - np.linalg.inv(sigma1)) / 2
-    b = mean1.transpose() @ (np.linalg.inv(sigma1) - mean2.transpose()) @ np.linalg.inv(sigma2)
+    a = ((np.linalg.inv(sigma2) - np.linalg.inv(sigma1)) / 2)
+    b = mean1.transpose() @ np.linalg.inv(sigma1) - mean2.transpose() @ np.linalg.inv(sigma2)
     # Don't specify base for math.log base e, (ln), np.log is base e
     c = np.math.log(p1 / p2) + np.log(np.linalg.det(sigma2) / np.linalg.det(sigma1))
 
@@ -161,7 +161,7 @@ def two_class_diag(X1, M1, S1, X2, M2, S2):
     Z1 = np.diag(np.power(w1, -0.5)) @ v1.transpose() @ X1
     Z2 = np.diag(np.power(w2, -0.5)) @ v1.transpose() @ X2
     # Make Sz1, Sz2
-    Sz1 = np.diag(np.power(w1, -0.5)) @ np.diag(np.power(w1, -0.5)) @ v1.transpose()
+    Sz1 = np.diag(np.power(w1, -0.5)) @ np.diag(w1) @ np.diag(np.power(w1, -0.5))
     Sz2 = np.diag(np.power(w1, -0.5)) @ v1.transpose() @ S2 @ v1 @ np.diag(np.power(w1, -0.5))
     # Now get the P overall
     Poa = 0 # stands for P OverAll
