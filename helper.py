@@ -4,6 +4,7 @@ from random import uniform as rand
 import numpy as np
 from numpy import linalg as LA
 from math import *
+import matplotlib.pyplot as plt
 
 
 def normal_point(dimensions=3):
@@ -20,6 +21,7 @@ def normal_point(dimensions=3):
     x = np.array(x)
     return x
 
+# THIS IDEA DID NOT WORK AT ALL! Somehow doing them together did?
 
 # def make_Z(size=200, dimensions=3):
 #     '''Create an array of Normally distributed points.'''
@@ -55,9 +57,11 @@ def make_ZX(lambda_x, mean, eigvec, size=200, dimensions=3):
     for i in range(1, size):
         pt = normal_point(dimensions)
         z = np.append(z, pt, axis=1)
+        pt = 0
         pt =  eigvec @ np.power(lambda_x, 0.5) @ pt + mean
         x = np.append(x, pt, axis=1)
-        return x, z
+    # ROFL Don't indent the return!!!!
+    return x, z
 
 
 
@@ -145,4 +149,16 @@ def two_class_diag(X1, M1, S1, X2, M2, S2):
     V1 = Poa @ X1
     V2 = Poa @ X2
     # maybe return everything, or just V
-    return V1, Mv1, Sv1, V2, Mv2, Sv2
+    return V1, Mv1, Sv1, V2, Mv2, 
+
+def nice_plot(omega1, omega2, dim1, dim2, label1, label2):
+    title = 'Plot in the ' + label1 + ' --' + label2 + ' domains'
+    dim1 -= 1  # Adjust for vector index.
+    dim2 -= 1  # Adjust for vector index.
+    plt.plot(omega1[dim1, :], omega1[dim2, :], 'y.', label="Class One")
+    plt.plot(omega1[dim1, :], omega1[dim2, :], 'p.', label="Class Two")
+    plt.title(title)
+    plt.legend(loc=1)
+    plt.xlabel(label1)
+    plt.ylabel(label2)
+    plt.show()
