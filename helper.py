@@ -3,7 +3,7 @@
 from random import uniform as rand
 import numpy as np
 from numpy import linalg as LA
-import math
+from math import *
 
 
 def normal_point(dimensions=3):
@@ -36,13 +36,15 @@ def make_Z(size=200, dimensions=3):
 def make_X(Z, lambda_x, mean, eigvec, size=200, dimensions=3):
     '''Given a standard normal vector Z, a mean, and eigen values and vectors of
        variance, generate a translated normal vector X.'''
-    x = eigvec @ np.power(lambda_x, 0.5) @ Z[0] + mean
+
+    x = eigvec @ np.power(lambda_x, 0.5) @ Z[0, :] + mean
 
     for i in range(1, size):
         point = eigvec @ np.power(lambda_x, 0.5) @ Z[i] + mean
         x = np.append(x, point, axis=1)
 
     return x
+
 
 def inv_sqrt(A):
     '''Perform the element wise inverse square root. Assumes m x n matrix.'''
@@ -51,3 +53,81 @@ def inv_sqrt(A):
             A[i][j] = math.pow(A[i][j], -0.5)
 
     return A
+
+
+def two_class_discriminant(trd, sigma1, sigma2, mean1, mean2, p1=0.5, p2=0.5):
+    '''Compute the two class discriminant for a given set of training data.'''
+    typer = np.zeros(1)
+    # If the training data and others are not np.array type make them np.array
+    # type.
+    if(type(trd) != type(typer)):
+        trd = np.array(trd)
+
+    if(type(sigma1) != type(typer)):
+        trd = np.array(sigma1)
+
+    if(type(sigma2) != type(typer)):
+        trd = np.array(sigma2)
+
+    if(type(mean1) != type(typer)):
+        trd = np.array(mean1)
+
+    if(type(mean2) != type(typer)):
+        trd = np.array(mean2)
+
+    # From our course notes
+    # ax^2 +bx + c
+    # xT a x => equivalent to x^2
+    a = (np.linalg.inv(sigma2) - np.linalg.inv(sigma1))
+
+    b = mean1.transpose() @ (np.linalg.inv(sigma1) - mean2.transpose()) @ np.linalg.inv(sigma2)
+    # Don't specify base for math.log base e, (ln), np.log is base e
+    c = log(p1 / p2) + np.log(np.linalg.det(sigma2) / np.linalg.det(sigma1))
+
+    return (trd.transpose() @ a @ trd + b @ trd + c)
+
+# Now to correct some problems with my diagonalization from last assignment. I
+# figured it would be better to include it in my helper functions instead of
+# making a lengthy setup in my main assignment. I think I may end up doing the
+# same thing for plotting.
+def two_class_diag(X1, M1, S1, X2, M2, S2):
+    '''Solve the simultaneous diagonalization problem.'''
+    # This part has the corrections to my assigment2 mistake. Mostly it was
+    # an issue with dimensions in numpy. I'm used to dimensioning my vectors
+    # MATLAB style, and I didn't want to be looping over and over.
+    w1, v1 = np.linalg.eig(S1)
+    w2, v2 = np.linalg.eig(S2)
+
+    # make the intermediary Y...
+    Y1 = v1.transpose() @ X1
+    Y2 = v2.transpose() @ X2
+    # Mean of Y
+    My1 = v1.transpose() @ M1
+    My2 = v2.transpose() @ M2
+    # Mean of Z
+    Mz1 = v1.transpose() @ My1
+    Mz1 = v2.transpose() @ My2
+    # Mean of V
+    Mv1 = v1.transpose() @ Mz1
+    Mv2 = v2.transpose() @ Mz2
+
+    # Make Z
+    # instead of using P1 and so forth just use the w1 and w2
+    Z1 = np.diag(np.power(w1, -0.5)) @ v1.transpose() @ X1
+    Z2 = np.diag(np.power(w2, -0.5)) @ v1.transpose() @ X2
+    # Make Sz1, Sz2
+    Sz1 = np.diag(np.power(w1, -0.5)) @ np.diag(np.power(w1, -0.5)) @ v1.transpose()
+    Sz2 = np.diag(np.power(w1, -0.5)) @ v1.transpose() @ sigma2 @ v1 @ np.diag(np.power(w1, -0.5))
+    # Now get the P overall
+    Poa = 0 # stands for P OverAll
+
+    # make V1 V2
+    wz1, vz1 = np.linalg.eig(Sz1)
+    wz2, vz2 = np.linalg.eig(Sz2)
+    Sv1 = vz2.transpose() @ Sz1 @ vz2
+    Sv2 = vz2.transpose() @ Sz2 @ vz2
+    Poa = vz2.transpose() @ np.diag(np.power(w1, -0.5)) @ v1.transpose()
+    V1 = Poa @ X1
+    V2 = Poa @ X2
+    # maybe return everything, or just V
+    return V1, Mv1, Sv1, V2, Mv2, Sv2
