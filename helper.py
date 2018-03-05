@@ -151,7 +151,7 @@ def two_class_diag(X1, M1, S1, X2, M2, S2):
     My2 = v2.transpose() @ M2
     # Mean of Z
     Mz1 = v1.transpose() @ My1
-    Mz1 = v2.transpose() @ My2
+    Mz2 = v2.transpose() @ My2
     # Mean of V
     Mv1 = v1.transpose() @ Mz1
     Mv2 = v2.transpose() @ Mz2
@@ -175,7 +175,7 @@ def two_class_diag(X1, M1, S1, X2, M2, S2):
     V1 = Poa @ X1
     V2 = Poa @ X2
     # maybe return everything, or just V
-    return V1, Mv1, Sv1, V2, Mv2, 
+    return V1, Mv1, Sv1, V2, Mv2, Sv2
 
 def nice_plot(omega1, omega2, dim1, dim2, label1, label2):
     title = 'Plot in the ' + label1 + ' --' + label2 + ' domains'

@@ -132,3 +132,8 @@ print("Is Class 1: " + str(c1t) + ", Not Class 1: " + str(c1f) +
       ", accuracy of " + str(acc1))
 print("Is Class 1: " + str(c2f) + ", not Class 1: " + str(c2t) +
       ", accuracy of " + str(acc2))
+
+V1, Mv1, Sv1, V2, Mv2, Sv2 = two_class_diag(X1, M1, S1, X2, M2, S2)
+
+nice_plot(V1, V2, 1, 2, 'V1', 'V2')
+nice_plot(V1, V2, 1, 3, 'V1', 'V3')
